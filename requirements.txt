@@ -1,0 +1,14 @@
+Cython>=0.23.4
+requests>=2.8.1
+lxml>=3.5.0
+numpy>=1.10.1
+dragnet>=1.0.1
+readability-lxml
+beautifulsoup4
+goose-extractor
+pymongo
+pandas
+xlrd
+openpyxl-2.4.1
+gensim
+nltk
