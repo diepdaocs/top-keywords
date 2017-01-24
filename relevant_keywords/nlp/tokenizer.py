@@ -1,6 +1,7 @@
+# coding=utf-8
 import string
 from abc import ABCMeta, abstractmethod
-from nltk import wordpunct_tokenize
+from nltk import wordpunct_tokenize, WhitespaceTokenizer
 
 
 class Tokenizer(object):
@@ -13,6 +14,9 @@ class Tokenizer(object):
 
 class GeneralTokenizer(Tokenizer):
 
+    def __init__(self):
+        self.tokenizer = WhitespaceTokenizer()
+
     def normalize(self, text):
         return ' '.join(self.tokenize(text))
 
@@ -24,8 +28,11 @@ class GeneralTokenizer(Tokenizer):
             text = unicode(text, 'utf-8', errors='ignore')
 
         # pre tokenize
-        for word in wordpunct_tokenize(text):
+        for word in self.tokenizer.tokenize(text):
             word = word.strip(string.punctuation).lower()
+            if word.endswith("'s") or word.endswith(u"’s"):
+                word = word[:-2]
+
             if word and word.strip():
                 result.append(word)
         return result
