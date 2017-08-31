@@ -70,19 +70,21 @@ if __name__ == '__main__':
         print 'Get most topics for keyword: %s' % keyword
         # Tokenize and filter stop words
         for idx, doc in enumerate(docs):
-            docs[idx] = generate_ngram([w for w in tokenizer.tokenize(doc) if w not in stop_words], 1, 3)
+            docs[idx] = generate_ngram([w for w in tokenizer.tokenize(doc) if w not in stop_words and len(w) > 2], 1, 3)
 
-        dictionary = Dictionary(docs)
-        dictionary.filter_extremes(no_below=2, no_above=0.7)
-        corpus = [dictionary.doc2bow(doc) for doc in docs]
-        if not corpus or not dictionary.token2id:
-            print 'Empty corpus for keyword: %s' % keyword
-            keyword_topics.append((keyword, []))
-            continue
+        # Counting terms
+        terms_count = {}
+        for doc in docs:
+            for term in doc:
+                if term in terms_count:
+                    terms_count[term] += 1
+                else:
+                    terms_count[term] = 1
 
-        lda = LdaModel(corpus=corpus, id2word=dictionary, passes=20, num_topics=5)
-        top_topics = lda.print_topics(num_topics=5)
-        keyword_topics.append((keyword, json.dumps([t[1] for t in top_topics], indent=4, encoding='utf-8')))
+        # Short and get most occurring terms
+        most_occurring_terms = sorted(terms_count, key=terms_count.__getitem__, reverse=True)[:20]
+        print most_occurring_terms
+        keyword_topics.append((keyword, ' + '.join('%d * %s' % (terms_count[k], k) for k in most_occurring_terms)))
 
     df = pd.DataFrame(data=keyword_topics, columns=['keyword', 'top_topics'])
-    df.to_excel('data/keyword_topics.xlsx', index=False, encoding='utf-8')
+    df.to_excel('data/keyword_topics_by_counting.xlsx', index=False, encoding='utf-8')
