@@ -42,7 +42,7 @@ class PageCrawler(object):
         if url:
             try:
                 headers = {'User-Agent': self.user_agent}
-                response = requests.get(url, verify=False, timeout=5, headers=headers)
+                response = requests.get(url, verify=False, timeout=10, headers=headers)
                 # raise exception when something error
                 if response.status_code == requests.codes.ok:
                     result[url]['content'] = response.content
@@ -119,7 +119,7 @@ class PageCrawlerWithStorage(object):
 
             try:
                 headers = {'User-Agent': self.user_agent}
-                response = requests.get(url, verify=False, timeout=5, headers=headers)
+                response = requests.get(url, verify=False, timeout=10, headers=headers)
                 # raise exception when something error
                 if response.status_code == requests.codes.ok:
                     result['content'] = response.content

@@ -27,7 +27,7 @@ def get_logger(name, level=logger_level, log_file=os.path.join(logs_dir, '%s.log
         return _LOGGERS[name]
     logger = logging.getLogger(name)
     logger.setLevel(level)
-    formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+    formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s (%(filename)s:%(lineno)d)')
     # add stream handle
     sh = logging.StreamHandler()
     sh.setFormatter(formatter)

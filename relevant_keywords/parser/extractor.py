@@ -1,6 +1,6 @@
 from multiprocessing import Pool, cpu_count
 
-from util.utils import get_logger, get_unicode
+from relevant_keywords.util.utils import get_logger, get_unicode
 
 import re
 from abc import ABCMeta, abstractmethod
