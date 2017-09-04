@@ -2,3 +2,5 @@ logs
 worker
 relevant_keywords/data
 .idea
+*-checkpoint.ipynb
+.xml
