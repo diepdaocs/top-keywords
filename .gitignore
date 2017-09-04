@@ -3,4 +3,6 @@ worker
 relevant_keywords/data
 .idea
 *-checkpoint.ipynb
-.xml
+*.xml
+env
+*.pyc
