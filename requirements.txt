@@ -1,3 +1,7 @@
 requests
 flask-restplus
 scikit-learn
+gnicorn
+tornado
+numpy
+scipy
