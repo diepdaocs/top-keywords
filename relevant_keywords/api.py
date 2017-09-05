@@ -43,10 +43,10 @@ class TopKeywordsResource(Resource):
         }
         try:
             urls = check_not_empty('urls')
-            top_n = request.values.get('top_n', 20)
-            min_df = request.values.get('min_df', 0.3)
-            max_df = request.values.get('max_df', 0.9)
-            max_voc = request.values.get('max_voc', 200)
+            top_n = int(request.values.get('top_n', 20))
+            min_df = float(request.values.get('min_df', 0.3))
+            max_df = float(request.values.get('max_df', 0.9))
+            max_voc = int(request.values.get('max_voc', 200))
             result.update(top_keyword.get_top_keywords(urls=urls, top_n=top_n, min_df=min_df,
                                                        max_df=max_df, max_voc=max_voc))
         except Exception as e:
