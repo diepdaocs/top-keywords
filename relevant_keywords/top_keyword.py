@@ -6,7 +6,7 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 
 stop_words = {'www', 'http', 'https', 'href', 'links', 'link', 'copyright', 'style', 'function',
               'tags', 'corporate', 'sort', 'details', 'detail', 'comment', 'comments', 'reviews', 'review',
-              'icon', 'footer', 'icon', 'body', 'begin', 'data'}
+              'icon', 'footer', 'icon', 'body', 'begin', 'data', 'stylesheet'}
 
 
 def is_number(text):
