@@ -61,5 +61,5 @@ class TopKeywordsResource(Resource):
 def check_not_empty(param):
     value = request.values.get(param)
     if not value:
-        raise ValueError('Param `%s` is empty', param)
+        raise ValueError('Param `%s` is empty' % param)
     return value
