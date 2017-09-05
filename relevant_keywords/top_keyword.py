@@ -67,9 +67,9 @@ class TopKeywords(object):
             }
         }
 
-    def get_top_keywords(self, urls, top_n=20, min_df=0.3, max_df=0.9, max_voc=200):
+    def get_top_keywords(self, urls, top_n=20, min_df=0.3, max_df=0.9, max_voc=200, min_ngram=1, max_ngram=1):
         crawled = self._crawl(urls)
-        vectorized = TfidfVectorizer(tokenizer=tokenize, stop_words='english',
+        vectorized = TfidfVectorizer(tokenizer=tokenize, stop_words='english', ngram_range=(min_ngram, max_ngram),
                                      min_df=min_df, max_df=max_df, max_features=max_voc)
         vectorized.fit_transform(crawled['contents'])
         features = vectorized.get_feature_names()

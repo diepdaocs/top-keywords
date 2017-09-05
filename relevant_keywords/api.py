@@ -31,7 +31,9 @@ class TopKeywordsResource(Resource):
                                'lower than the given threshold. This value is also called cut-off in the literature. '
                                'If float, the parameter represents a proportion of documents, integer absolute counts.',
                      'max_voc': 'Num of vocabulary to keep, default is `200`',
-                     'top_n': 'Top n keywords, default is `20`'})
+                     'top_n': 'Top n keywords, default is `20`',
+                     'min_gram': 'Min ngram, default is `1`',
+                     'max_ngram': 'Max ngram, default is `1`'})
     def get(self):
         """
         Get top keywords from urls
@@ -47,8 +49,10 @@ class TopKeywordsResource(Resource):
             min_df = float(request.values.get('min_df', 0.3))
             max_df = float(request.values.get('max_df', 0.9))
             max_voc = int(request.values.get('max_voc', 200))
-            result.update(top_keyword.get_top_keywords(urls=urls, top_n=top_n, min_df=min_df,
-                                                       max_df=max_df, max_voc=max_voc))
+            min_ngram = int(request.values.get('min_ngram', 1))
+            max_ngram = int(request.values.get('max_ngram', 1))
+            result.update(top_keyword.get_top_keywords(urls=urls, top_n=top_n, min_df=min_df, max_df=max_df,
+                                                       max_voc=max_voc, min_ngram=min_ngram, max_ngram=max_ngram))
         except Exception as e:
             logger.exception(e)
             result['ok'] = False
