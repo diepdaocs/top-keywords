@@ -5,3 +5,5 @@ gnicorn
 tornado
 numpy
 scipy
+nltk
+gensim

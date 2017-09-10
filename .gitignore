@@ -6,3 +6,4 @@ relevant_keywords/data
 *.xml
 env
 *.pyc
+.idea
