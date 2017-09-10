@@ -80,7 +80,8 @@ class TopKeywords(object):
     def _crawl(self, urls):
         payload = {
             'urls': urls,
-            'extractor': 'all_text'
+            'extractor': 'all_text',
+            'cache': 1
         }
         response = requests.post(url=self.crawler_endpoint, data=payload)
         url_pages = response.json()
