@@ -69,21 +69,28 @@ class TopKeywords(object):
     METRIC_COUNT = 'count'
     METRIC_LDA = 'lda'
 
+    EXTRACTORS = {'dragnet', 'goose', 'goose_dragnet', 'readability', 'selective', 'all_text'}
+
     def __init__(self, crawler_endpoint):
         self.crawler_endpoint = crawler_endpoint
         self.logger = get_logger(self.__class__.__name__)
-        self.supported_metrics = [self.METRIC_TFIDF, self.METRIC_COUNT, self.METRIC_LDA]
+        self.supported_metrics = {self.METRIC_TFIDF, self.METRIC_COUNT, self.METRIC_LDA}
 
     def get_supported_metric_names(self):
-        return ' or '.join('`%s`' % m for m in self.supported_metrics)
+        return ', '.join('`%s`' % m for m in self.supported_metrics)
 
-    def _crawl(self, urls):
+    def get_supported_extractors(self):
+        return ', '.join('`%s`' % e for e in self.EXTRACTORS)
+
+    def _crawl(self, urls, extractor):
         payload = {
             'urls': urls,
-            'extractor': 'all_text',
+            'extractor': extractor,
             'cache': 1
         }
         response = requests.post(url=self.crawler_endpoint, data=payload)
+        if not response.ok:
+            raise RuntimeError('Call crawler api error: %s - %s' % (response.status_code, response.reason))
         url_pages = response.json()
         failed_crawl = []
         contents = []
@@ -105,13 +112,18 @@ class TopKeywords(object):
             }
         }
 
-    def get_top_keywords(self, urls, top_n=20, metric='tfidf', min_df=0.3, max_df=0.9,
+    def get_top_keywords(self, urls, extractor='all_text', top_n=20, metric='tfidf', min_df=0.3, max_df=0.9,
                          max_voc=200, min_ngram=1, max_ngram=1):
+
+        if extractor not in self.EXTRACTORS:
+            raise RuntimeError('Extractor `%s` is not supported, accepted are %s' %
+                               (extractor, self.get_supported_extractors()))
+
         if metric not in self.supported_metrics:
             raise RuntimeError('Metric name `%s` is not supported, accepted are %s' %
                                (metric, self.get_supported_metric_names()))
 
-        crawled = self._crawl(urls)
+        crawled = self._crawl(urls, extractor)
         contents = crawled['contents']
         top_keywords = []
         if metric == self.METRIC_TFIDF:

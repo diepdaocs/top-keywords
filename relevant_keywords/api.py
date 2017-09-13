@@ -22,6 +22,8 @@ class TopKeywordsResource(Resource):
     """
 
     @api.doc(params={'urls': 'Urls separate by comma',
+                     'extractor': 'Extractor method for parsing html, supported are %s, default is `%s`'
+                                  % (top_keyword.get_supported_extractors(), 'all_text'),
                      'metric': 'Analytic metric, supported are %s, default is `%s`'
                                % (top_keyword.get_supported_metric_names(), top_keyword.METRIC_TFIDF),
                      'max_df': 'Float in range [0.0, 1.0] or int, default=`0.9`. '
@@ -47,6 +49,7 @@ class TopKeywordsResource(Resource):
         }
         try:
             urls = check_not_empty('urls')
+            extractor = request.values.get('extractor', 'all_text').lower()
             metric = request.values.get('metric', 'tfidf').lower()
             top_n = int(request.values.get('top_n', 20))
             min_df = float(request.values.get('min_df', 0.3))
@@ -55,8 +58,8 @@ class TopKeywordsResource(Resource):
             min_ngram = int(request.values.get('min_ngram', 1))
             max_ngram = int(request.values.get('max_ngram', 1))
             result.update(
-                top_keyword.get_top_keywords(urls=urls, metric=metric, top_n=top_n, min_df=min_df, max_df=max_df,
-                                             max_voc=max_voc, min_ngram=min_ngram, max_ngram=max_ngram))
+                top_keyword.get_top_keywords(urls=urls, extractor=extractor, metric=metric, top_n=top_n, min_df=min_df,
+                                             max_df=max_df, max_voc=max_voc, min_ngram=min_ngram, max_ngram=max_ngram))
         except Exception as e:
             logger.exception(e)
             result['ok'] = False
