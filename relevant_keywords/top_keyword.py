@@ -75,9 +75,13 @@ class TopKeywords(object):
         self.crawler_endpoint = crawler_endpoint
         self.logger = get_logger(self.__class__.__name__)
         self.supported_metrics = {self.METRIC_TFIDF, self.METRIC_COUNT, self.METRIC_LDA}
+        self.crawler_user_agent = None
 
     def get_supported_metric_names(self):
         return ', '.join('`%s`' % m for m in self.supported_metrics)
+
+    def set_crawler_user_agent(self, user_agent):
+        self.crawler_user_agent = user_agent
 
     def get_supported_extractors(self):
         return ', '.join('`%s`' % e for e in self.EXTRACTORS)
@@ -86,7 +90,8 @@ class TopKeywords(object):
         payload = {
             'urls': urls,
             'extractor': extractor,
-            'cache': 1
+            'cache': 1,
+            'user_agent': self.crawler_user_agent
         }
         response = requests.post(url=self.crawler_endpoint, data=payload)
         if not response.ok:
@@ -100,7 +105,8 @@ class TopKeywords(object):
             else:
                 failed_crawl.append({
                     'url': url,
-                    'error': page['error']
+                    'error': page['error'],
+                    'code': page['code']
                 })
 
         return {

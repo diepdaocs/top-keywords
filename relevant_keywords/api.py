@@ -14,6 +14,9 @@ top_keyword = TopKeywords(crawler_endpoint)
 
 ns = api.namespace('keyword', 'Top Keywords')
 
+user_agents = ['Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) '
+               'Chrome/39.0.2171.95 Safari/537.36']
+
 
 @ns.route('/top')
 class TopKeywordsResource(Resource):
@@ -22,6 +25,7 @@ class TopKeywordsResource(Resource):
     """
 
     @api.doc(params={'urls': 'Urls separate by comma',
+                     'user_agent': "The 'User-Agent' of crawler, default is `%s`" % user_agents[0],
                      'extractor': 'Extractor method for parsing html, supported are %s, default is `%s`'
                                   % (top_keyword.get_supported_extractors(), 'all_text'),
                      'metric': 'Analytic metric, supported are %s, default is `%s`'
@@ -49,6 +53,7 @@ class TopKeywordsResource(Resource):
         }
         try:
             urls = check_not_empty('urls')
+            user_agent = request.values.get('user_agent', user_agents[0])
             extractor = request.values.get('extractor', 'all_text').lower()
             metric = request.values.get('metric', 'tfidf').lower()
             top_n = int(request.values.get('top_n', 20))
@@ -57,6 +62,8 @@ class TopKeywordsResource(Resource):
             max_voc = int(request.values.get('max_voc', 200))
             min_ngram = int(request.values.get('min_ngram', 1))
             max_ngram = int(request.values.get('max_ngram', 1))
+
+            top_keyword.set_crawler_user_agent(user_agent)
             result.update(
                 top_keyword.get_top_keywords(urls=urls, extractor=extractor, metric=metric, top_n=top_n, min_df=min_df,
                                              max_df=max_df, max_voc=max_voc, min_ngram=min_ngram, max_ngram=max_ngram))
