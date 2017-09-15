@@ -9,4 +9,4 @@ ENV=${PYTHONPATH}/env
 HOST=0.0.0.0
 
 # Start app
-${ENV}/bin/python ${ENV}/bin/gunicorn -k tornado -w 2 -b ${HOST}:${PORT} relevant_keywords.main:app --max-requests 10000
+${ENV}/bin/python ${ENV}/bin/gunicorn -k tornado -w 2 -b ${HOST}:${PORT} relevant_keywords.main:app --max-requests 10000 --timeout 3600
