@@ -105,8 +105,8 @@ class TopKeywords(object):
             else:
                 failed_crawl.append({
                     'url': url,
-                    'error': page['error'],
-                    'code': page['code']
+                    'error': page.get('error'),
+                    'code': page.get('code')
                 })
 
         return {
